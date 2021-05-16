@@ -1,28 +1,45 @@
 <template>
   <div id="app">
-    <img alt="Vue logo" src="./assets/logo.png">
-    <HelloWorld msg="Welcome to Your Vue.js App"/>
+    <div class="container">
+      <h2>Workshop 2</h2>
+      <hr>
+      <div v-if="!image">
+        <input type="file" class="form-control" @change="onFileChange">
+      </div>
+      <div v-else>
+        <img :src="image" class="img-fluid">
+        <button class="btn btn-danger" @click="removeImage">Remove</button>
+      </div>
+    </div>
   </div>
 </template>
 
 <script>
-import HelloWorld from './components/HelloWorld.vue'
-
 export default {
   name: 'App',
-  components: {
-    HelloWorld
-  }
+  data() {
+    return {
+      image: ""
+    }
+  },
+  methods: {
+    onFileChange: function(e){
+      console.log(e.target.files);
+      var files = e.target.files
+      if(!files.length)
+        return
+      this.createImage(files[0])
+    },
+    createImage(files){
+      var reader = new FileReader();
+      reader.onload = (e) => {
+        this.image = e.target.result;
+      }
+      reader.readAsDataURL(files)
+    },
+    removeImage(){
+      this.image = ""
+    }
+  },
 }
 </script>
-
-<style>
-#app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-  margin-top: 60px;
-}
-</style>
